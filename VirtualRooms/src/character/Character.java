@@ -9,12 +9,15 @@ public class Character
 	private HashMap<String, Option> characteristics;
 	private HashMap<String, Integer> scores;
 	private AdditionSet additionSet;
+	private HashMap<String, String> states;
 	
-	public Character(HashMap<String, Option> characteristics, HashMap<String, Integer> scores, AdditionSet additionSet)
+	public Character(HashMap<String, Option> characteristics, HashMap<String, Integer> scores, AdditionSet additionSet, 
+			HashMap<String, String> states)
 	{
 		this.characteristics = characteristics;
 		this.scores = scores;
 		this.additionSet = additionSet;
+		this.states = states;
 	}
 	
 	public String toString()
@@ -25,6 +28,13 @@ public class Character
 			stringBuilder.append(entry.getKey());
 			stringBuilder.append(" : ");
 			stringBuilder.append(entry.getValue().getName());
+			stringBuilder.append("\r\n");
+		}
+		for (Entry<String, String> entry : this.states.entrySet())
+		{
+			stringBuilder.append(entry.getKey());
+			stringBuilder.append(" : ");
+			stringBuilder.append(entry.getValue());
 			stringBuilder.append("\r\n");
 		}
 		for (Entry<String, Integer> entry : this.scores.entrySet())

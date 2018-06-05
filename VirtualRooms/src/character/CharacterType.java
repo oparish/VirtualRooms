@@ -30,6 +30,8 @@ public class CharacterType
 	HashMap<String, Characteristic> characteristics = new HashMap<String, Characteristic>();
 	HashMap<String, Score> scores = new HashMap<String, Score>();
 	HashMap<String, Addition> additions = new HashMap<String, Addition>();
+	HashMap<String, HashMap<String, String>> states = new HashMap<String, HashMap<String, String>>();
+	HashMap<String, String> defaultStates = new HashMap<String, String>();
 	
 	public CharacterType(JsonObject jsonObject)
 	{
@@ -38,6 +40,7 @@ public class CharacterType
 		this.loadCharacteristicTypes(jsonObject);
 		this.loadScoreTypes(jsonObject);
 		this.loadAdditions(jsonObject);
+		this.loadStates(jsonObject);
 	}
 	
 	private void loadCharacteristicTypes(JsonObject jsonObject)
@@ -70,6 +73,26 @@ public class CharacterType
 		}
 	}
 	
+	private void loadStates(JsonObject jsonObject)
+	{
+		JsonObject additionsJson = jsonObject.getJsonObject(STATES);
+		for (Entry<String, JsonValue> stateSet : additionsJson.entrySet())
+		{
+			boolean first = true;
+			HashMap<String, String> stateMap = new HashMap<String, String>();
+			for (Entry<String, JsonValue> entry : ((JsonObject) stateSet.getValue()).entrySet())
+			{
+				stateMap.put(entry.getKey(), ((JsonString) entry.getValue()).getString());
+				if (first)
+				{
+					this.defaultStates.put(stateSet.getKey(), entry.getKey());
+					first = false;
+				}
+			}
+			this.states.put(stateSet.getKey(), stateMap);
+		}
+	}
+	
 	public Character generateCharacter()
 	{
 		HashMap<String, Option> charCharacteristics = new HashMap<String, Option>();
@@ -91,8 +114,8 @@ public class CharacterType
 		{
 			additionDetails.addAdditionList(entry.getKey(), entry.getValue().generateAdditionsList());
 		}
-		
-		return new Character(charCharacteristics, scores, additionDetails);
+				
+		return new Character(charCharacteristics, scores, additionDetails, this.defaultStates);
 	}
 	
 	public static void main(String[] args)
