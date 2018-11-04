@@ -5,25 +5,43 @@ import javax.json.JsonObject;
 import data.DiceSet;
 import main.Main;
 
-public class Score
+public abstract class Score
 {
 	private static final String NAME = "name";
-	private static final String DICESET = "diceSet";
+	private static final String TYPE = "type";
 	
 	String name;
-	DiceSet diceSet;
-	
+
 	public String getName() {
 		return name;
-	}
-
-	public DiceSet getDiceSet() {
-		return diceSet;
 	}
 
 	public Score(JsonObject jsonObject)
 	{
 		this.name = jsonObject.getString(NAME);
-		this.diceSet = Main.getCurrentScenario().getDiceSet(jsonObject.getString(DICESET));
+	}
+	
+	public abstract int generateValue();
+	
+	public static Score makeScore(JsonObject jsonObject)
+	{
+		String typeString = jsonObject.getString(TYPE);
+		ScoreType scoreType = ScoreType.valueOf(typeString.toUpperCase());
+		switch (scoreType)
+		{
+			case RANDOMINITIAL:
+				return new RandomInitialValueScore(jsonObject);
+			case FIXEDINITIAL:
+				return new FixedInitialValueScore(jsonObject);
+			default:
+				System.out.println("Score Type not recognised.");
+				return null;
+		}
+
+	}
+	
+	private enum ScoreType
+	{
+		RANDOMINITIAL, FIXEDINITIAL;
 	}
 }

@@ -27,13 +27,14 @@ public class CharacterType
 	private static final String STATES = "states";
 	private static final String ADDITIONS = "additions";
 	
+	String name;
 	HashMap<String, Characteristic> characteristics = new HashMap<String, Characteristic>();
 	HashMap<String, Score> scores = new HashMap<String, Score>();
 	HashMap<String, Addition> additions = new HashMap<String, Addition>();
 	HashMap<String, HashMap<String, String>> states = new HashMap<String, HashMap<String, String>>();
 	HashMap<String, String> defaultStates = new HashMap<String, String>();
 	
-	public CharacterType(JsonObject jsonObject)
+	public CharacterType(JsonObject jsonObject, String name)
 	{
 		super();
 
@@ -59,7 +60,7 @@ public class CharacterType
 		for (Entry<String, JsonValue> entry : scoreJson.entrySet())
 		{
 			String name = entry.getKey();
-			this.scores.put(name, new Score((JsonObject) entry.getValue()));
+			this.scores.put(name, Score.makeScore((JsonObject) entry.getValue()));
 		}
 	}
 
@@ -105,7 +106,7 @@ public class CharacterType
 		HashMap<String, Integer> scores = new HashMap<String, Integer>();
 		for (Entry<String, Score> entry : this.scores.entrySet())
 		{
-			Integer result = entry.getValue().getDiceSet().rollDice();
+			Integer result = entry.getValue().generateValue();
 			scores.put(entry.getKey(), result);
 		}
 		
@@ -117,6 +118,11 @@ public class CharacterType
 				
 		return new Character(charCharacteristics, scores, additionDetails, this.defaultStates);
 	}
+	
+//	public String toString()
+//	{
+//		
+//	}
 	
 	public static void main(String[] args)
 	{	
