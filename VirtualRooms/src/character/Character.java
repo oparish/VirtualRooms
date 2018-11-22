@@ -6,19 +6,42 @@ import java.util.Map.Entry;
 
 public class Character
 {
+	private String name;
 	private HashMap<String, Option> characteristics;
 	private HashMap<String, Integer> scores;
 	private AdditionSet additionSet;
 	private HashMap<String, String> states;
 	
 	public Character(HashMap<String, Option> characteristics, HashMap<String, Integer> scores, AdditionSet additionSet, 
-			HashMap<String, String> states)
+			HashMap<String, String> states, String identifier)
 	{
 		this.characteristics = characteristics;
 		this.scores = scores;
 		this.additionSet = additionSet;
 		this.states = states;
+		this.name = this.setupName(identifier); 
 	}
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	private String setupName(String identifier)
+	{
+		StringBuilder nameBuilder = new StringBuilder();
+		String[] identifierParts = identifier.split("\\+");
+		boolean first = true;
+		for (String identifierPart : identifierParts)
+		{
+			if (!first)
+				nameBuilder.append(" ");
+			nameBuilder.append(this.characteristics.get(identifierPart).getName());
+			first = false;
+		}
+		return nameBuilder.toString();
+	}
+	
 	
 	public String toString()
 	{

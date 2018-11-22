@@ -26,8 +26,10 @@ public class CharacterType
 	private static final String SCORES = "scores";
 	private static final String STATES = "states";
 	private static final String ADDITIONS = "additions";
+	private static final String IDENTIFIER = "identifier";
 	
 	String name;
+	String identifier;
 	HashMap<String, Characteristic> characteristics = new HashMap<String, Characteristic>();
 	HashMap<String, Score> scores = new HashMap<String, Score>();
 	HashMap<String, Addition> additions = new HashMap<String, Addition>();
@@ -37,7 +39,7 @@ public class CharacterType
 	public CharacterType(JsonObject jsonObject, String name)
 	{
 		super();
-
+		this.identifier = jsonObject.getString(IDENTIFIER);
 		this.loadCharacteristicTypes(jsonObject);
 		this.loadScoreTypes(jsonObject);
 		this.loadAdditions(jsonObject);
@@ -116,7 +118,7 @@ public class CharacterType
 			additionDetails.addAdditionList(entry.getKey(), entry.getValue().generateAdditionsList());
 		}
 				
-		return new Character(charCharacteristics, scores, additionDetails, this.defaultStates);
+		return new Character(charCharacteristics, scores, additionDetails, this.defaultStates, this.identifier);
 	}
 	
 //	public String toString()
